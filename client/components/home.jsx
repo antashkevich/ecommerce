@@ -1,22 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { getRates } from '../redux/reducers/settings'
 import Head from './head'
-// import wave from '../assets/images/wave.jpg'
+import Header from './header'
+import Products from './products'
 
 const Home = () => {
-  const [counter, setCounterNew] = useState(0)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getRates())
+  }, [])
 
   return (
-    <div>
-      <Head title="Dashboard" />
-      <img alt="wave" src="images/wave.jpg" />
-      <button type="button" onClick={() => setCounterNew(counter + 1)}>
-        updateCounter
-      </button>
-      <div> Hello World Dashboard {counter} </div>
+    <div className="body">
+      <Head title="Main page" />
+      <Header caption="Shop" />
+      <Products />
     </div>
   )
 }
-
-Home.propTypes = {}
 
 export default Home

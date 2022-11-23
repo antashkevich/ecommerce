@@ -4,6 +4,8 @@ import cors from 'cors'
 import sockjs from 'sockjs'
 import cookieParser from 'cookie-parser'
 
+import { readFile } from 'fs/promises'
+import axios from 'axios'
 import config from './config'
 import Html from '../client/html'
 
@@ -29,6 +31,27 @@ server.get('/', (req, res) => {
     <h2>This is SkillCrucial Express Server!</h2>
     <h3>Client hosted at <a href="http://localhost:8087">localhost:8087</a>!</h3>
   `)
+})
+
+server.get('/api/v1/products', async (req, res) => {
+  const arrayProducts = await readFile(`${__dirname}/data/data.json`, 'utf-8')
+    .then((data) => JSON.parse(data))
+    .catch(() => [])
+  res.json(arrayProducts.slice(0, 20))
+})
+
+const urlCurrency = 'https://api.exchangerate.host/latest?base=USD&symbols=USD,EUR,CAD'
+const defaultCurrency = {
+  CAD: 1.34766,
+  EUR: 1.00196,
+  USD: 1
+}
+
+server.get('/api/v1/currency', async (req, res) => {
+  const currency = await axios(urlCurrency)
+    .then(({ data }) => data.rates)
+    .catch(() => defaultCurrency)
+  res.json(currency)
 })
 
 server.get('/*', (req, res) => {
