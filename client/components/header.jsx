@@ -27,7 +27,7 @@ const Header = (props) => {
         </div>
         <div
           id="order-price"
-          className="flex justify-between p-4 rounded-lg button-group text-white font-semibold"
+          className="flex justify-between px-4 py-2 rounded-lg button-group text-white font-semibold"
         >
           {(totalPrice * rates[currencyName]).toFixed(2)} {currencyName}
         </div>

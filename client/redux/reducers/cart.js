@@ -1,4 +1,5 @@
-const ADD_ITEM = '@cart/ADD_ITEM'
+const ADD_COUNT_ITEM = '@cart/ADD_COUNT_ITEM'
+const REMOVE_COUNT_ITEM = '@cart/REMOVE_COUNT_ITEM'
 const INCREASE_AMOUNT = '@cart/INCREASE_AMOUNT'
 const DECREASE_AMOUNT = '@cart/DECREASE_AMOUNT'
 const REMOVE_ITEM = '@cart/REMOVE_ITEM'
@@ -12,12 +13,21 @@ const initialState = {
 
 export default (state = initialState, action = {}) => {
   switch (action.type) {
-    case ADD_ITEM: {
+    case ADD_COUNT_ITEM: {
       return {
         ...state,
         list: action.payload.list,
         totalAmount: state.totalAmount + 1,
         totalPrice: state.totalPrice + action.payload.price
+      }
+    }
+
+    case REMOVE_COUNT_ITEM: {
+      return {
+        ...state,
+        list: action.payload.list,
+        totalAmount: state.totalAmount - 1,
+        totalPrice: state.totalPrice - action.payload.price
       }
     }
 
@@ -59,7 +69,26 @@ export const addItem = (id) => {
     const itemAmount = typeof list[id] === 'undefined' ? 1 : list[id].amount + 1
 
     return dispatch({
-      type: ADD_ITEM,
+      type: ADD_COUNT_ITEM,
+      payload: {
+        list: {
+          ...list,
+          [id]: { amount: itemAmount }
+        },
+        price
+      }
+    })
+  }
+}
+
+export const removeItem = (id) => {
+  return (dispatch, getState) => {
+    const { list } = getState().cart
+    const { price } = getState().products.list[id]
+    const itemAmount = typeof list[id] === 'undefined' ? 0 : list[id].amount - 1
+
+    return dispatch({
+      type: REMOVE_COUNT_ITEM,
       payload: {
         list: {
           ...list,
@@ -92,13 +121,6 @@ export const changeItemAmount = (id, count) => {
         payload: {
           [id]: { amount: newAmount }
         }
-      })
-    }
-    if (newAmount <= 0) {
-      delete list[id]
-      dispatch({
-        type: REMOVE_ITEM,
-        payload: list
       })
     }
 

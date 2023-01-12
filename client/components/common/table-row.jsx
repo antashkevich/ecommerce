@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeItemAmount, removeCurrentItem } from '../../redux/reducers/cart'
 
@@ -7,6 +7,19 @@ const TableRow = ({ id }) => {
   const product = useSelector((store) => store.products.list)
   const productInCart = useSelector((store) => store.cart.list)
   const { currencyName, rates } = useSelector((store) => store.settings)
+  const [isCount, setCount] = useState(productInCart[id].amount)
+
+  const decreaseCount = (productId) => {
+    setCount(isCount - 1)
+
+    dispatch(changeItemAmount(productId, -1))
+  }
+
+  const increaseCount = (productId) => {
+    setCount(isCount + 1)
+
+    dispatch(changeItemAmount(productId, +1))
+  }
 
   return (
     <tr>
@@ -28,17 +41,19 @@ const TableRow = ({ id }) => {
             className="flex items-center justify-center font-semibold text-white rounded-lg product-btn"
             type="button"
             onClick={() => {
-              dispatch(changeItemAmount(id, 1))
+              increaseCount(id)
             }}
           >
             +
           </button>
           <span className="card__product-amount">{productInCart[id].amount}</span>
           <button
-            className="flex items-center justify-center font-semibold text-white rounded-lg product-btn"
+            className={`flex items-center justify-center font-semibold text-white rounded-lg product-btn ${
+              isCount <= 0 ? 'disabled' : ''
+            }`}
             type="button"
             onClick={() => {
-              dispatch(changeItemAmount(id, -1))
+              decreaseCount(id)
             }}
           >
             -
