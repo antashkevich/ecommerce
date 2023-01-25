@@ -4,9 +4,8 @@ import cors from 'cors'
 import sockjs from 'sockjs'
 import cookieParser from 'cookie-parser'
 
-import { readFile } from 'fs/promises'
-import axios from 'axios'
 import config from './config'
+import { sortProductsLst, getProductsfunc, getRates } from './common'
 import Html from '../client/html'
 
 require('colors')
@@ -34,24 +33,32 @@ server.get('/', (req, res) => {
 })
 
 server.get('/api/v1/products', async (req, res) => {
-  const arrayProducts = await readFile(`${__dirname}/data/data.json`, 'utf-8')
-    .then((data) => JSON.parse(data))
-    .catch(() => [])
+  const arrayProducts = await getProductsfunc()
   res.json(arrayProducts.slice(0, 20))
 })
 
-const urlCurrency = 'https://api.exchangerate.host/latest?base=USD&symbols=USD,EUR,CAD'
-const defaultCurrency = {
-  CAD: 1.34766,
-  EUR: 1.00196,
-  USD: 1
-}
-
 server.get('/api/v1/currency', async (req, res) => {
-  const currency = await axios(urlCurrency)
-    .then(({ data }) => data.rates)
-    .catch(() => defaultCurrency)
+  const currency = await getRates()
   res.json(currency)
+})
+
+const logs = []
+
+server.get('/api/v1/logs', (req, res) => {
+  res.json(logs)
+})
+
+server.post('/api/v1/logs', (req, res) => {
+  logs.push(req.body)
+  res.json(logs)
+})
+
+server.post('/api/v1/sort', async (req, res) => {
+  const arrayProducts = await getProductsfunc()
+  const { sortType, direction } = req.body
+  const sortProductsArray = sortProductsLst(arrayProducts, sortType, direction)
+
+  res.json(sortProductsArray.slice(0, 20))
 })
 
 server.get('/*', (req, res) => {

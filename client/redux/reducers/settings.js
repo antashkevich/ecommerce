@@ -1,11 +1,19 @@
 const GET_RATES = '@settings/GET_RATES'
-const CHANGE_CURRENCY = '@settings/CHANGE_CURRENCY'
+export const CHANGE_CURRENCY = '@settings/CHANGE_CURRENCY'
+export const SET_SORT_DIRECTION = '@settings/SET_SORT_DIRECTION'
 
 const initialState = {
   rates: {
+    CAD: 1.34766,
+    EUR: 1.00196,
     USD: 1
   },
-  currencyName: 'USD'
+  currencyName: 'USD',
+  sortType: 'name',
+  sort: {
+    name: true,
+    price: true
+  }
 }
 
 export default (state = initialState, action = {}) => {
@@ -20,6 +28,13 @@ export default (state = initialState, action = {}) => {
       return {
         ...state,
         currencyName: action.payload
+      }
+    }
+    case SET_SORT_DIRECTION: {
+      return {
+        ...state,
+        sort: action.payload.direction,
+        sortType: action.payload.sortType
       }
     }
     default:
@@ -39,5 +54,24 @@ export const getRates = () => {
 }
 
 export const changeCurrency = (name) => {
-  return { type: CHANGE_CURRENCY, payload: name }
+  return { 
+    type: CHANGE_CURRENCY, 
+    payload: name
+   }
+}
+
+export const setSortToggle = (sortType) => {
+  return (dispatch, getState) => {
+    const { sort } = getState().settings
+    dispatch({
+      type: SET_SORT_DIRECTION,
+      payload: {
+        direction: {
+          ...sort,
+          [sortType]: !sort[sortType]
+        },
+        sortType
+      }
+    })
+  }
 }

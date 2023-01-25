@@ -4,7 +4,6 @@ import { changeItemAmount, removeCurrentItem } from '../../redux/reducers/cart'
 
 const TableRow = ({ id }) => {
   const dispatch = useDispatch()
-  const product = useSelector((store) => store.products.list)
   const productInCart = useSelector((store) => store.cart.list)
   const { currencyName, rates } = useSelector((store) => store.settings)
   const [isCount, setCount] = useState(productInCart[id].amount)
@@ -27,13 +26,13 @@ const TableRow = ({ id }) => {
       <td className="product__image">
         <img
           className="object-cover rounded-lg h-16 w-16"
-          src={product[id].image}
-          alt={product[id].title}
+          src={productInCart[id].image}
+          alt={productInCart[id].title}
         />
       </td>
-      <td>{product[id].title}</td>
+      <td>{productInCart[id].title}</td>
       <td>
-        {(product[id].price * rates[currencyName]).toFixed(2)} {currencyName}
+        {(productInCart[id].price * rates[currencyName]).toFixed(2)} {currencyName}
       </td>
       <td>
         <div className="flex justify-between items-center">
@@ -61,7 +60,7 @@ const TableRow = ({ id }) => {
         </div>
       </td>
       <td>
-        {(product[id].price * rates[currencyName] * productInCart[id].amount).toFixed(2)}{' '}
+        {(productInCart[id].price * rates[currencyName] * productInCart[id].amount).toFixed(2)}{' '}
         {currencyName}
       </td>
       <td>

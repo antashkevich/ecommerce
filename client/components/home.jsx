@@ -9,7 +9,7 @@ const Home = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getRates())
-  }, [])
+  }, [dispatch])
 
   return (
     <div className="body">

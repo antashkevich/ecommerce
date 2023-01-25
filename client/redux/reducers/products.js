@@ -33,3 +33,26 @@ export const getProductsFromServer = () => {
       .catch((err) => console.log(err))
   }
 }
+
+export const sortProducts = (sortType, direction) => {
+  return (dispatch) => {
+    fetch('/api/v1/sort', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ sortType, direction })
+    })
+      .then((data) => data.json())
+      .then((arr) =>
+        arr.reduce((acc, rec) => {
+          acc[rec.id] = rec
+          return acc
+        }, {})
+      )
+      .then((sortedProductsArray) => {
+        dispatch({ type: GET_PRODUCTS, payload: sortedProductsArray })
+      })
+      .catch((err) => console.log(err))
+  }
+}

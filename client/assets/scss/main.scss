@@ -11,6 +11,10 @@
     margin: 0 auto;
 }
 
+a:hover, button:hover {
+    opacity: 0.8;
+}
+
 .button-group {
     background-color: #1976d3;
 }
@@ -130,4 +134,28 @@ table {
 .disabled {
     opacity: 0.6;
     pointer-events: none;
+}
+
+.btn-sort {
+    span {
+        transition: 0.6s;
+    }    
+}
+
+.sort-default {
+    span {
+        transform: rotate(-90deg);
+    }
+}
+
+.sort-down {
+    span {
+        transform: rotate(0);
+    }
+}
+
+.sort-up {
+    span {
+        transform: rotate(-180deg);
+    }
 }

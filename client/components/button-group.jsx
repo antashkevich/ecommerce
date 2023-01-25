@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { changeCurrency } from '../redux/reducers/settings'
 
 const ButtonGroup = () => {
   const btns = ['USD', 'EUR', 'CAD']
   const dispatch = useDispatch()
-  const [isActiveBtn, setActiveBtn] = useState(btns[0])
+  const { currencyName } = useSelector((store) => store.settings)
 
-  const handleBtn = (e, activeBtn) => {
-    setActiveBtn(activeBtn)
+  const handleBtn = (e) => {
     dispatch(changeCurrency(e.target.innerText))
   }
 
@@ -17,9 +16,9 @@ const ButtonGroup = () => {
       {btns.map((btn) => (
         <button
           type="button"
-          className={`text-white font-semibold ${isActiveBtn === btn && 'button-group-active'}`}
+          className={`text-white font-semibold ${currencyName === btn && 'button-group-active'}`}
           key={btn}
-          onClick={(e) => handleBtn(e, btn)}
+          onClick={(e) => handleBtn(e)}
         >
           {btn}
         </button>
