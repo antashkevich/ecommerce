@@ -8,6 +8,7 @@ import ProductCard from './product-card'
 const Products = () => {
   const productsList = useSelector((s) => s.products.list)
   const { sort } = useSelector((s) => s.settings)
+  const { loaded } = useSelector((s) => s.settings)
   const dispatch = useDispatch()
 
   const sortByType = (sortType) => {
@@ -18,8 +19,10 @@ const Products = () => {
   }
 
   useEffect(() => {
-    dispatch(getProductsFromServer())
-  }, [dispatch])
+    if (!loaded) {
+      dispatch(getProductsFromServer())
+    }
+  }, [])
 
   return (
     <>

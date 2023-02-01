@@ -1,26 +1,28 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { changeCurrency } from '../redux/reducers/settings'
+import { changeCurrency, getRates } from '../redux/reducers/settings'
 
 const ButtonGroup = () => {
-  const btns = ['USD', 'EUR', 'CAD']
   const dispatch = useDispatch()
+  const { rates } = useSelector((s) => s.settings)
   const { currencyName } = useSelector((store) => store.settings)
 
-  const handleBtn = (e) => {
-    dispatch(changeCurrency(e.target.innerText))
+  const onClickButton = (name = 'USD') => {
+    dispatch(getRates())
+    dispatch(changeCurrency(name.toUpperCase()))
   }
 
   return (
     <div className="flex justify-between p-4 rounded-lg gap-x-4 button-group">
-      {btns.map((btn) => (
+      {Object.keys(rates).map((btn) => (
         <button
-          type="button"
+          key={btn.toLowerCase()}
           className={`text-white font-semibold ${currencyName === btn && 'button-group-active'}`}
-          key={btn}
-          onClick={(e) => handleBtn(e)}
+          type="button"
+          data-name={btn.toLowerCase()}
+          onClick={(e) => onClickButton(e.target.dataset.name)}
         >
-          {btn}
+          {btn.toUpperCase()}
         </button>
       ))}
     </div>
